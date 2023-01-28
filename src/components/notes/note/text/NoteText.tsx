@@ -37,41 +37,48 @@ export const NoteText = (props: NoteTextProps) => {
       setMentionPosition(textAreaRef.current!.selectionStart)
     }
 
-    if (mentionPosition !== null) {
-      if (event.key === 'Enter' || event.key === ' ') {
-        setMentionPosition(null)
-      }
-      if (
-        (event.key === 'Delete' || event.key === 'Backspace') &&
-        !text[mentionPosition - 1]
-      ) {
-        setMentionPosition(null)
-      }
+    if (
+      mentionPosition !== null &&
+      (event.key === 'Escape' || !text[mentionPosition - 1])
+    ) {
+      setMentionPosition(null)
     }
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (
       mentionPosition !== null &&
-      (event.key === 'ArrowUp' || event.key === 'ArrowDown')
+      (event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown' ||
+        event.key === 'Enter')
     ) {
       event.preventDefault()
     }
   }
 
   const onMention = (user: User) => {
+    const { username } = user
     setText((currentText) => {
-      const newText =
-        currentText.substring(0, mentionPosition!) +
-        user.username +
-        currentText.substring(
-          mentionPosition! + mentionText.length,
-          currentText.length
-        )
+      const preString = currentText.substring(0, mentionPosition!)
+      const postString = currentText.substring(
+        mentionPosition! + mentionText.length,
+        currentText.length
+      )
+      const modifiedPostString = postString.length > 0 ? postString : ' '
+      const newText = preString + username + modifiedPostString
       props.onChangeText?.(newText)
       return newText
     })
+
     setMentionPosition(null)
+
+    setTimeout(() => {
+      textAreaRef.current?.focus()
+      if (textAreaRef.current && mentionPosition) {
+        const cursorPosition = mentionPosition + username.length + 1 // Plus one because of the extra space
+        textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition)
+      }
+    }, 100) // Needed an explicit timeout to handle the whole case correctly
   }
 
   const offsets = useMemo(

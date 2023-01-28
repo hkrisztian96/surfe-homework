@@ -15,13 +15,17 @@ export const NoteMentionUser = ({
   onMention,
   focus,
 }: NoteMentionUserProps) => {
-  const userDivRef = useRef<HTMLDivElement | null>(null)
-
   const enterPressed = useKeyPress('Enter')
+
+  const userDivRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (focus) {
-      userDivRef.current?.focus()
+      userDivRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      })
     }
   }, [focus])
 
@@ -35,7 +39,7 @@ export const NoteMentionUser = ({
     <div
       key={user.email}
       ref={userDivRef}
-      className="user"
+      className={'user ' + (focus ? 'user--focused' : '')}
       onClick={() => onMention?.(user)}
       tabIndex={-1}
     >

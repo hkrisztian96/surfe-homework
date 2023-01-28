@@ -22,16 +22,13 @@ export const getMentionPosition = (
 
   const cursorLeftOffsetByCharacter =
     lineBreakModifiedSelectionStart % LINE_LENGTH
-  const cursorTopOffsetByCharacter =
-    DEFAULT_TOP_OFFSET +
-    (lineBreakModifiedSelectionStart / LINE_LENGTH) * DEFAULT_TOP_OFFSET
+  const cursorTopOffsetByCharacter = lines.length * DEFAULT_TOP_OFFSET
 
   const offsetLeft =
-    current.getBoundingClientRect().left +
+    current.offsetLeft +
     cursorLeftOffsetByCharacter * SELECTION_START_TO_LEFT_OFFSET_RATIO
 
-  const offsetTop =
-    cursorTopOffsetByCharacter + current.getBoundingClientRect().top
+  const offsetTop = cursorTopOffsetByCharacter + current.offsetTop
 
   return { offsetLeft, offsetTop }
 }

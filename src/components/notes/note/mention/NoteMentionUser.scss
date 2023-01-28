@@ -6,8 +6,12 @@
   padding: 15px;
   text-align: center;
 
-  &:hover, &:focus  {
+  &:hover, &--focused  {
     background-color: lightskyblue;
+  }
+
+  &:focus-visible {
+    outline: none;
   }
 
   &__data {

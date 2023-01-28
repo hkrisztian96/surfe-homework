@@ -1,15 +1,13 @@
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Note } from '../../../../types/note'
 import { useAppContext } from '../../../App'
-import './NoteCreate.scss'
+import './NewNote.scss'
 
-type NoteCreateProps = {
+type NewNoteProps = {
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>
 }
 
-export const NoteCreate = (props: NoteCreateProps) => {
+export const NewNote = (props: NewNoteProps) => {
   const { noteService } = useAppContext()
 
   const createNote = () => {
@@ -20,9 +18,9 @@ export const NoteCreate = (props: NoteCreateProps) => {
       )
   }
   return (
-    <div className="add-container">
-      <button className="add-button" onClick={createNote}>
-        <FontAwesomeIcon icon={faPlus} size="2x" />
+    <div className="new-note-container">
+      <button className="new-note-button" onClick={createNote}>
+        New Note
       </button>
     </div>
   )
