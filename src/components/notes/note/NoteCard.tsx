@@ -28,7 +28,7 @@ export const NoteCard = ({ note }: NoteCardProps) => {
   return (
     <div className="note-container">
       <div className="title">Note - {id}</div>
-      <NoteText text={body} onChangeText={saveTextDebounced} />
+      <NoteText id={id} text={body} onChangeText={saveTextDebounced} />
       <NoteFooter id={note.id} isLoading={isSaving} />
     </div>
   )

@@ -7,6 +7,7 @@ import './NoteText.scss'
 import { NoteTextBackdrop } from './NoteTextBackdrop'
 
 type NoteTextProps = {
+  id: number
   text: string
   onChangeText?: (text: string) => void
 }
@@ -76,7 +77,7 @@ export const NoteText = (props: NoteTextProps) => {
   }
 
   const onBlur = () => {
-    setMentionCursorPosition(null)
+    // setMentionCursorPosition(null)
   }
 
   const onMention = (user: User) => {
@@ -108,7 +109,8 @@ export const NoteText = (props: NoteTextProps) => {
   }, [text])
 
   return (
-    <div className="text-container">
+    // Reverse default stacking
+    <div className="text-container" style={{ zIndex: props.id }}>
       <textarea
         ref={textAreaRef}
         className="text-container__text"
