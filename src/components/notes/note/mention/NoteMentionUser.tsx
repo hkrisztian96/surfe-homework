@@ -40,7 +40,7 @@ export const NoteMentionUser = ({
       key={user.email}
       ref={userDivRef}
       className={'user ' + (focus ? 'user--focused' : '')}
-      onClick={() => onMention?.(user)}
+      onMouseDown={() => onMention?.(user)}
       tabIndex={-1}
     >
       <div className="user__data">

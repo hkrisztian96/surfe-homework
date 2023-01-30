@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { User } from '../../../../types/user'
 import { getMentionOffsetTop } from '../../../../utils/position'
-import { useAppContext } from '../../../App'
 import { NoteMention } from '../mention/NoteMention'
 import './NoteText.scss'
 import { NoteTextBackdrop } from './NoteTextBackdrop'
@@ -9,12 +8,11 @@ import { NoteTextBackdrop } from './NoteTextBackdrop'
 type NoteTextProps = {
   id: number
   text: string
+  users: User[]
   onChangeText?: (text: string) => void
 }
 
 export const NoteText = (props: NoteTextProps) => {
-  const { users } = useAppContext()
-
   const [text, setText] = useState<string>(props.text)
 
   const [isDropTarget, setIsDropTarget] = useState<boolean>(false)
@@ -53,7 +51,7 @@ export const NoteText = (props: NoteTextProps) => {
       event.preventDefault()
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (event.key === '@') {
         setMentionText('')
         setMentionOffsetTop(getMentionOffsetTop(textAreaRef, textAreaHelperRef))
@@ -119,7 +117,7 @@ export const NoteText = (props: NoteTextProps) => {
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     const username = event.dataTransfer.getData('username')
     setText((currentText) => {
-      const newText = currentText + '\n@' + username
+      const newText = currentText + '@' + username
       props.onChangeText?.(newText)
       return newText
     })
@@ -133,13 +131,13 @@ export const NoteText = (props: NoteTextProps) => {
   }, [text])
 
   return (
-    // Reverse default stacking
     <div
       className="note-text"
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      style={{ zIndex: props.id }}
+      // Reverse default stacking
+      style={{ zIndex: props.id + 1 }}
     >
       <textarea
         ref={textAreaRef}
@@ -158,13 +156,17 @@ export const NoteText = (props: NoteTextProps) => {
         ref={textAreaHelperRef}
         className="note-text__caret-position-helper"
       />
-      <NoteTextBackdrop innerRef={backdropRef} text={text} users={users} />
+      <NoteTextBackdrop
+        innerRef={backdropRef}
+        text={text}
+        users={props.users}
+      />
       <NoteMention
         isOpen={mentionCursorPosition !== null}
         offsetLeft={0}
         offsetTop={mentionOffsetTop}
         filterText={mentionText}
-        users={users}
+        users={props.users}
         onMention={onMention}
       />
     </div>
