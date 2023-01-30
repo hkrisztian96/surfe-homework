@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useAppContext } from '../..'
 import { Note } from '../../types/note'
+import { useAppContext } from '../App'
 import { NewNote } from './note/new/NewNote'
 import { NoteCard } from './note/NoteCard'
 import './Notes.scss'

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { useAppContext } from '../../../..'
 import { User } from '../../../../types/user'
 import { getMentionOffsetTop } from '../../../../utils/position'
+import { useAppContext } from '../../../App'
 import { NoteMention } from '../mention/NoteMention'
 import './NoteText.scss'
 import { NoteTextBackdrop } from './NoteTextBackdrop'
@@ -102,7 +102,7 @@ export const NoteText = (props: NoteTextProps) => {
         const cursorPosition = mentionCursorPosition + username.length + 1 // Plus one because of the extra space
         textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition)
       }
-    })
+    }, 100)
 
     setMentionCursorPosition(null)
   }

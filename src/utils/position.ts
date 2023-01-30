@@ -1,5 +1,12 @@
 import { MutableRefObject } from 'react'
 
+/**
+ * Calculates the mention dropdown top offset using the main textarea and a helper one.
+ * The position is based on the current position of the textarea caret.
+ * @param mentionTextAreaRef the textarea that contains the mention dropdown.
+ * @param helperTextAreaRef the helper textarea for calculating the position.
+ * @returns the offset from the top of the textarea.
+ */
 export const getMentionOffsetTop = (
   mentionTextAreaRef: MutableRefObject<HTMLTextAreaElement | null>,
   helperTextAreaRef: MutableRefObject<HTMLTextAreaElement | null>

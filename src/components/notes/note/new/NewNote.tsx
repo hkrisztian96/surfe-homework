@@ -1,6 +1,6 @@
 import React from 'react'
-import { useAppContext } from '../../../..'
 import { Note } from '../../../../types/note'
+import { useAppContext } from '../../../App'
 import './NewNote.scss'
 
 type NewNoteProps = {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useAppContext } from '../../..'
 import { User } from '../../../types/user'
+import { useAppContext } from '../../App'
 import { NoteMentionUser } from '../note/mention/NoteMentionUser'
 import './NotesSidebar.scss'
 

@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react'
 
+/**
+ * Hook that checks whether the targeted key was pressed.
+ * @param targetKey the targeted key.
+ * @returns a boolean which indicates the targeted key press.
+ */
 export const useKeyPress = (targetKey: string) => {
   const [keyPressed, setKeyPressed] = useState<boolean>(false)
 
