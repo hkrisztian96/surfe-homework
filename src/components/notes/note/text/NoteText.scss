@@ -1,14 +1,51 @@
-.text {
-  width: 97%;
-  height: 80%;
-  textarea {
-    font-size: 16px;
-    height: 100%;
-    width: 100%;
+.text-container {
+  width: 295px;
+  height: 240px;
+  display: block;
+  margin: 0 auto;
+  z-index: 1;
+  transform: translateZ(0);
+  -webkit-text-size-adjust: none;
+
+  &__text {
+    width: 295px;
+    height: 240px;
+    padding: 10px;
+    font: 18px/22px 'Helvetica';
+    letter-spacing: 1px;
+    display: block;
+    position: absolute;
+    z-index: 2;
+    margin: 0;
+    color: #444;
+    background-color: transparent;
+    overflow: auto;
     resize: none;
     border: none;
     outline: none;
+    transition: transform 1s;
     scrollbar-color: lightskyblue #FAF5F5;
     scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      color: lightskyblue;
+      background: #FAF5F5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: lightskyblue;
+    }
+  }
+
+  &__caret-position-helper {
+    position: absolute;
+    z-index: -1;
+    border: none;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    left: 0;
+    top: 0;
   }
 }

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { User } from '../../../../types/user'
 import { useKeyPress } from '../../../../utils/useKeyPress'
-import { useAppContext } from '../../../App'
 import './NoteMention.scss'
 import { NoteMentionUser } from './NoteMentionUser'
 
@@ -9,6 +8,7 @@ type NoteMentionProps = {
   isOpen: boolean
   offsetTop: number
   offsetLeft: number
+  users: User[]
   onMention: (mentionedUser: User) => void
   filterText?: string
 }
@@ -17,15 +17,13 @@ export const NoteMention = ({
   isOpen,
   offsetTop,
   offsetLeft,
+  users,
   onMention,
   filterText,
 }: NoteMentionProps) => {
-  const { userService } = useAppContext()
-
   const upArrowPressed = useKeyPress('ArrowUp')
   const downArrowPressed = useKeyPress('ArrowDown')
 
-  const [users, setUsers] = useState<User[]>([])
   const [focusedUserIndex, setFocusedUserIndex] = useState<number | null>(null)
 
   const filteredUsers = useMemo(() => {
@@ -41,10 +39,6 @@ export const NoteMention = ({
       })
       .slice(0, 5)
   }, [users, filterText])
-
-  useEffect(() => {
-    userService.getUsers().then((response) => setUsers(response.data))
-  }, [])
 
   useEffect(() => {
     const firstIndex = 0

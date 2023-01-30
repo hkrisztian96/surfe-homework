@@ -1,34 +1,49 @@
 import { MutableRefObject } from 'react'
-import { MentionPosition } from '../types/mentionPosition'
 
-export const getMentionPosition = (
-  ref: MutableRefObject<HTMLTextAreaElement | null>
-): MentionPosition => {
-  if (!ref.current) {
-    return { offsetLeft: 0, offsetTop: 0 }
+export const getMentionOffsetTop = (
+  mentionTextAreaRef: MutableRefObject<HTMLTextAreaElement | null>,
+  helperTextAreaRef: MutableRefObject<HTMLTextAreaElement | null>
+): number => {
+  if (!mentionTextAreaRef.current || !helperTextAreaRef.current) {
+    return 0
   }
 
-  const { current } = ref
+  const cs = window.getComputedStyle(mentionTextAreaRef.current)
+  const pl = parseInt(cs.paddingLeft)
+  const pr = parseInt(cs.paddingRight)
+  let lh = parseInt(cs.lineHeight)
 
-  const DEFAULT_TOP_OFFSET = 20
-  const SELECTION_START_TO_LEFT_OFFSET_RATIO = 9
-  const LINE_LENGTH = 33
+  if (isNaN(lh)) {
+    lh = parseInt(cs.fontSize)
+  }
 
-  const lines = current.value.substring(0, current.selectionStart).split('\n')
-  const lastLine = lines[lines.length - 1]
+  helperTextAreaRef.current.style.width =
+    mentionTextAreaRef.current.clientWidth - pl - pr + 'px'
 
-  const lineBreakModifiedSelectionStart =
-    (lines.length - 1) * LINE_LENGTH + lastLine.length
+  helperTextAreaRef.current.style.font = cs.font
+  helperTextAreaRef.current.style.letterSpacing = cs.letterSpacing
+  helperTextAreaRef.current.style.whiteSpace = cs.whiteSpace
+  helperTextAreaRef.current.style.wordBreak = cs.wordBreak
+  helperTextAreaRef.current.style.wordSpacing = cs.wordSpacing
 
-  const cursorLeftOffsetByCharacter =
-    lineBreakModifiedSelectionStart % LINE_LENGTH
-  const cursorTopOffsetByCharacter = lines.length * DEFAULT_TOP_OFFSET
+  helperTextAreaRef.current.value = mentionTextAreaRef.current.value.substring(
+    0,
+    mentionTextAreaRef.current.selectionEnd
+  )
 
-  const offsetLeft =
-    current.offsetLeft +
-    cursorLeftOffsetByCharacter * SELECTION_START_TO_LEFT_OFFSET_RATIO
+  let numberOfLines = Math.floor(helperTextAreaRef.current.scrollHeight / lh)
 
-  const offsetTop = cursorTopOffsetByCharacter + current.offsetTop
+  if (numberOfLines == 0) {
+    numberOfLines = 1
+  }
 
-  return { offsetLeft, offsetTop }
+  const SIZE_OF_LINE = 22
+  const DEFAULT_OFFSET = 10
+
+  const offsetTop =
+    numberOfLines * SIZE_OF_LINE -
+    mentionTextAreaRef.current.scrollTop +
+    DEFAULT_OFFSET
+
+  return offsetTop
 }

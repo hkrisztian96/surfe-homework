@@ -1,8 +1,10 @@
-import React, { ChangeEvent, useMemo, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useAppContext } from '../../../..'
 import { User } from '../../../../types/user'
-import { getMentionPosition } from '../../../../utils/position'
+import { getMentionOffsetTop } from '../../../../utils/position'
 import { NoteMention } from '../mention/NoteMention'
 import './NoteText.scss'
+import { NoteTextBackdrop } from './NoteTextBackdrop'
 
 type NoteTextProps = {
   text: string
@@ -10,58 +12,79 @@ type NoteTextProps = {
 }
 
 export const NoteText = (props: NoteTextProps) => {
+  const { users } = useAppContext()
+
   const [text, setText] = useState<string>(props.text)
 
-  const [mentionPosition, setMentionPosition] = useState<number | null>(null)
+  const [mentionOffsetTop, setMentionOffsetTop] = useState<number>(0)
+  const [mentionCursorPosition, setMentionCursorPosition] = useState<
+    number | null
+  >(null)
   const [mentionText, setMentionText] = useState<string>('')
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
+  const textAreaHelperRef = useRef<HTMLTextAreaElement | null>(null)
+  const backdropRef = useRef<HTMLDivElement | null>(null)
 
   const onChangeText = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value
     setText(value)
 
-    if (mentionPosition !== null) {
-      const indexOfWhitespace = value.indexOf(' ', mentionPosition)
+    if (mentionCursorPosition !== null) {
+      const indexOfWhitespace = value.indexOf(' ', mentionCursorPosition)
       const endOfMentionText =
         indexOfWhitespace === -1 ? value.length : indexOfWhitespace
-      setMentionText(value.substring(mentionPosition, endOfMentionText))
+      setMentionText(value.substring(mentionCursorPosition, endOfMentionText))
     }
 
     props.onChangeText?.(value)
   }
 
-  const onKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === '@') {
-      setMentionText('')
-      setMentionPosition(textAreaRef.current!.selectionStart)
-    }
-
-    if (
-      mentionPosition !== null &&
-      (event.key === 'Escape' || !text[mentionPosition - 1])
-    ) {
-      setMentionPosition(null)
-    }
-  }
-
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (
-      mentionPosition !== null &&
+      mentionCursorPosition !== null &&
       (event.key === 'ArrowUp' ||
         event.key === 'ArrowDown' ||
         event.key === 'Enter')
     ) {
       event.preventDefault()
     }
+
+    setTimeout(() => {
+      if (event.key === '@') {
+        setMentionText('')
+        setMentionOffsetTop(getMentionOffsetTop(textAreaRef, textAreaHelperRef))
+        setMentionCursorPosition(textAreaRef.current!.selectionStart)
+      }
+      if (mentionCursorPosition !== null && event.key === 'Escape') {
+        setMentionCursorPosition(null)
+      }
+    })
+  }
+
+  const onScroll = () => {
+    // Add setTimeout so the new text can get through before scrolling
+    setTimeout(() => {
+      if (backdropRef.current && textAreaRef.current) {
+        backdropRef.current.scroll({
+          behavior: 'auto',
+          top: textAreaRef.current.scrollTop,
+          left: textAreaRef.current.scrollLeft,
+        })
+      }
+    })
+  }
+
+  const onBlur = () => {
+    setMentionCursorPosition(null)
   }
 
   const onMention = (user: User) => {
     const { username } = user
     setText((currentText) => {
-      const preString = currentText.substring(0, mentionPosition!)
+      const preString = currentText.substring(0, mentionCursorPosition!)
       const postString = currentText.substring(
-        mentionPosition! + mentionText.length,
+        mentionCursorPosition! + mentionText.length,
         currentText.length
       )
       const modifiedPostString = postString.length > 0 ? postString : ' '
@@ -70,39 +93,43 @@ export const NoteText = (props: NoteTextProps) => {
       return newText
     })
 
-    setMentionPosition(null)
+    setMentionCursorPosition(null)
 
-    setTimeout(() => {
-      textAreaRef.current?.focus()
-      if (textAreaRef.current && mentionPosition) {
-        const cursorPosition = mentionPosition + username.length + 1 // Plus one because of the extra space
-        textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition)
-      }
-    }, 100) // Needed an explicit timeout to handle the whole case correctly
+    if (textAreaRef.current && mentionCursorPosition) {
+      const cursorPosition = mentionCursorPosition + username.length + 1 // Plus one because of the extra space
+      textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition)
+    }
   }
 
-  const offsets = useMemo(
-    () => getMentionPosition(textAreaRef),
-    [
-      textAreaRef.current?.getBoundingClientRect,
-      textAreaRef.current?.selectionStart,
-    ]
-  )
+  useEffect(() => {
+    if (mentionCursorPosition !== null && !text[mentionCursorPosition - 1]) {
+      setMentionCursorPosition(null)
+    }
+  }, [text])
 
   return (
-    <div className="text">
+    <div className="text-container">
       <textarea
         ref={textAreaRef}
+        className="text-container__text"
+        spellCheck="false"
         value={text}
         onChange={onChangeText}
-        onKeyUpCapture={onKeyUp}
         onKeyDown={onKeyDown}
+        onScroll={onScroll}
+        onBlur={onBlur}
       />
+      <textarea
+        ref={textAreaHelperRef}
+        className="text-container__caret-position-helper"
+      />
+      <NoteTextBackdrop innerRef={backdropRef} text={text} users={users} />
       <NoteMention
-        isOpen={mentionPosition !== null}
-        offsetLeft={offsets.offsetLeft}
-        offsetTop={offsets.offsetTop}
+        isOpen={mentionCursorPosition !== null}
+        offsetLeft={0}
+        offsetTop={mentionOffsetTop}
         filterText={mentionText}
+        users={users}
         onMention={onMention}
       />
     </div>

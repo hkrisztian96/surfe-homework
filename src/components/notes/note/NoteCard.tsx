@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import { Note } from '../../../types/note'
-import { useAppContext } from '../../App'
 import './NoteCard.scss'
 import { NoteFooter } from './footer/NoteFooter'
 import { NoteText } from './text/NoteText'
+import { useAppContext } from '../../..'
 
 type NoteCardProps = {
   note: Note

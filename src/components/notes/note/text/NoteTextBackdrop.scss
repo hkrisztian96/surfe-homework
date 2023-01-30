@@ -1,0 +1,37 @@
+.backdrop {
+  width: 295px;
+  height: 240px;
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+  overflow: auto;
+  pointer-events: none;
+  transition: transform 1s;
+  scrollbar-color: lightskyblue #FAF5F5;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    color: lightskyblue;
+    background: #FAF5F5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: lightskyblue;
+  }
+
+  &__highlights {
+    padding: 10px;
+    font: 18px/22px 'Helvetica';
+    letter-spacing: 1px;
+    white-space: pre-wrap;
+	  word-wrap: break-word;
+	  color: transparent;
+  }
+
+  &--mark {
+    border-radius: 3px;
+    color: transparent;
+    background-color: lightskyblue;
+  }
+}

@@ -2,3 +2,7 @@ html, body {
   background-color: #e6f2fe;
   font-family: Helvetica;
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
