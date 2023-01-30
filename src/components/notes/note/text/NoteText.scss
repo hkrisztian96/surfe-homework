@@ -1,4 +1,4 @@
-.text-container {
+.note-text {
   width: 295px;
   height: 240px;
   display: block;
@@ -6,7 +6,7 @@
   z-index: 1;
   transform: translateZ(0);
 
-  &__text {
+  &__input {
     width: 295px;
     height: 240px;
     padding: 10px;
@@ -25,6 +25,10 @@
     transition: transform 1s;
     scrollbar-color: lightskyblue #FAF5F5;
     scrollbar-width: thin;
+
+    &--drop-target {
+      background-color: lightskyblue;
+    }
 
     &::-webkit-scrollbar {
       width: 8px;

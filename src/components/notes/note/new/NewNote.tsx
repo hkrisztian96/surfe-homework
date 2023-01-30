@@ -18,8 +18,8 @@ export const NewNote = (props: NewNoteProps) => {
       )
   }
   return (
-    <div className="new-note-container">
-      <button className="new-note-button" onClick={createNote}>
+    <div className="new-note">
+      <button className="new-note__button" onClick={createNote}>
         New Note
       </button>
     </div>

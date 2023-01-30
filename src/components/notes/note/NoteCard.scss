@@ -1,4 +1,4 @@
-.note-container {
+.note {
   border: 1px solid transparent;
   border-radius: 10px;
   min-height: 300px;
@@ -13,7 +13,7 @@
   animation-name: initial-pop;
   animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
 
-  .title {
+  &__title {
     font-size: 24px;
     font-weight: bold;
     cursor: default;

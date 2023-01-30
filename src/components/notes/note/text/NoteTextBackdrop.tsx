@@ -27,7 +27,7 @@ export const NoteTextBackdrop = ({
       if (users.some((user) => user.username === username)) {
         s = s.replaceAll(
           mention,
-          '<span class="backdrop--mark">' + mention + '</span>'
+          '<span class="note-backdrop--mark">' + mention + '</span>'
         )
       }
     })
@@ -45,9 +45,9 @@ export const NoteTextBackdrop = ({
   }
 
   return (
-    <div ref={innerRef} className="backdrop">
+    <div ref={innerRef} className="note-backdrop">
       <div
-        className="backdrop__highlights"
+        className="note-backdrop__highlights"
         dangerouslySetInnerHTML={{
           __html: highlightMentions(highlightedText),
         }}

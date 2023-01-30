@@ -17,6 +17,8 @@ export const NoteText = (props: NoteTextProps) => {
 
   const [text, setText] = useState<string>(props.text)
 
+  const [isDropTarget, setIsDropTarget] = useState<boolean>(false)
+
   const [mentionOffsetTop, setMentionOffsetTop] = useState<number>(0)
   const [mentionCursorPosition, setMentionCursorPosition] = useState<
     number | null
@@ -77,7 +79,7 @@ export const NoteText = (props: NoteTextProps) => {
   }
 
   const onBlur = () => {
-    // setMentionCursorPosition(null)
+    setMentionCursorPosition(null)
   }
 
   const onMention = (user: User) => {
@@ -88,18 +90,40 @@ export const NoteText = (props: NoteTextProps) => {
         mentionCursorPosition! + mentionText.length,
         currentText.length
       )
-      const modifiedPostString = postString.length > 0 ? postString : ' '
+      const modifiedPostString =
+        postString[0] === ' ' ? postString : ' ' + postString
       const newText = preString + username + modifiedPostString
       props.onChangeText?.(newText)
       return newText
     })
 
-    setMentionCursorPosition(null)
+    setTimeout(() => {
+      if (textAreaRef.current && mentionCursorPosition) {
+        const cursorPosition = mentionCursorPosition + username.length + 1 // Plus one because of the extra space
+        textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition)
+      }
+    })
 
-    if (textAreaRef.current && mentionCursorPosition) {
-      const cursorPosition = mentionCursorPosition + username.length + 1 // Plus one because of the extra space
-      textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition)
-    }
+    setMentionCursorPosition(null)
+  }
+
+  const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    setIsDropTarget(true)
+  }
+
+  const onDragLeave = () => {
+    setIsDropTarget(false)
+  }
+
+  const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const username = event.dataTransfer.getData('username')
+    setText((currentText) => {
+      const newText = currentText + '\n@' + username
+      props.onChangeText?.(newText)
+      return newText
+    })
+    setIsDropTarget(false)
   }
 
   useEffect(() => {
@@ -110,10 +134,19 @@ export const NoteText = (props: NoteTextProps) => {
 
   return (
     // Reverse default stacking
-    <div className="text-container" style={{ zIndex: props.id }}>
+    <div
+      className="note-text"
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      style={{ zIndex: props.id }}
+    >
       <textarea
         ref={textAreaRef}
-        className="text-container__text"
+        className={
+          'note-text__input ' +
+          (isDropTarget ? 'note-text__input--drop-target' : '')
+        }
         spellCheck="false"
         value={text}
         onChange={onChangeText}
@@ -123,7 +156,7 @@ export const NoteText = (props: NoteTextProps) => {
       />
       <textarea
         ref={textAreaHelperRef}
-        className="text-container__caret-position-helper"
+        className="note-text__caret-position-helper"
       />
       <NoteTextBackdrop innerRef={backdropRef} text={text} users={users} />
       <NoteMention

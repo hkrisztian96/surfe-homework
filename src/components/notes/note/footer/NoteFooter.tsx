@@ -16,10 +16,10 @@ type NoteFooterProps = {
 
 export const NoteFooter = ({ isLoading, id }: NoteFooterProps) => {
   return (
-    <div className="footer-icons">
+    <div className="note-footer">
       <div
-        id={'disabled-footer-icons-' + id}
-        className="footer-icons__disabled"
+        id={'note-footer__disabled-' + id}
+        className="note-footer__disabled"
         data-tooltip-content="These features are disabled in the coding challenge version."
       >
         <FontAwesomeIcon icon={faTextSlash} />
@@ -32,7 +32,7 @@ export const NoteFooter = ({ isLoading, id }: NoteFooterProps) => {
           <FontAwesomeIcon icon={faSpinner} spin={true} />
         </div>
       )}
-      <Tooltip anchorId={'disabled-footer-icons-' + id} place="bottom" />
+      <Tooltip anchorId={'note-footer__disabled-' + id} place="bottom" />
     </div>
   )
 }

@@ -1,8 +1,9 @@
-.container {
+.notes {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-left: 200px;
 
   &__grid {
     margin-bottom: 10px;
@@ -12,7 +13,8 @@
     padding: 5px 15px;
   }
 
-  @media only screen and (max-width: 769px) {
+  @media only screen and (max-width: 1000px) {
+    margin-left: 0;
     &__grid {
       grid-template-columns: repeat(1, auto);
     }

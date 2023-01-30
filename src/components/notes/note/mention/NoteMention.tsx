@@ -71,10 +71,7 @@ export const NoteMention = ({
   return (
     <>
       {isOpen && (
-        <div
-          className="mention-container"
-          style={{ top: offsetTop, left: offsetLeft }}
-        >
+        <div className="mention" style={{ top: offsetTop, left: offsetLeft }}>
           {filteredUsers.map((user, index) => (
             <NoteMentionUser
               key={user.username}

@@ -5,6 +5,7 @@ import { NewNote } from './note/new/NewNote'
 import { NoteCard } from './note/NoteCard'
 import './Notes.scss'
 import { NotesTitle } from './NotesTitle'
+import { NotesSidebar } from './sidebar/NotesSidebar'
 
 export const Notes = () => {
   const { noteService } = useAppContext()
@@ -21,14 +22,17 @@ export const Notes = () => {
   }, [])
 
   return (
-    <div className="container">
-      <NotesTitle />
-      <NewNote setNotes={setNotes} />
-      <div className="container__grid">
-        {sortedNotes.map((note) => (
-          <NoteCard key={note.id} note={note} />
-        ))}
+    <>
+      <NotesSidebar />
+      <div className="notes">
+        <NotesTitle />
+        <NewNote setNotes={setNotes} />
+        <div className="notes__grid">
+          {sortedNotes.map((note) => (
+            <NoteCard key={note.id} note={note} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

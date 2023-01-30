@@ -1,0 +1,43 @@
+.notes-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  height: 100%;
+  background-color: white;
+  scrollbar-color: lightskyblue #FAF5F5;
+  scrollbar-width: thin;
+  overflow: auto;
+  box-shadow: 10px 0 5px -2px rgba(50, 50, 93, 0.25);
+
+  &--collapsed {
+    display: none;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid dodgerblue;
+    line-height: 50px;
+    color: dodgerblue;
+    font-weight: bold;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 70px);
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    color: lightskyblue;
+    background: #FAF5F5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: lightskyblue;
+  }
+}
